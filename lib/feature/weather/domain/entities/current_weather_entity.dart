@@ -19,22 +19,37 @@ class CurrentWeatherEntity extends Equatable {
   final num? cod;
 
   const CurrentWeatherEntity({
-     this.coord,
-     this.weather,
-     this.base,
-     this.main,
-     this.visibility,
-     this.wind,
-     this.rain,
-     this.clouds,
-     this.dt,
-     this.sys,
-     this.timezone,
-     this.id,
-     this.name,
-     this.cod,
+    this.coord,
+    this.weather,
+    this.base,
+    this.main,
+    this.visibility,
+    this.wind,
+    this.rain,
+    this.clouds,
+    this.dt,
+    this.sys,
+    this.timezone,
+    this.id,
+    this.name,
+    this.cod,
   });
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [
+    coord,
+    weather,
+    base,
+    main,
+    visibility,
+    wind,
+    rain,
+    clouds,
+    dt,
+    sys,
+    timezone,
+    id,
+    name,
+    cod,
+  ];
 }
