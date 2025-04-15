@@ -1,37 +1,22 @@
-import 'package:my_weather/feature/weather/domain/entities/current_weather_entity.dart';
+import '../../domain/entities/current_weather_entity.dart';
 
 class CurrentWeatherModel extends CurrentWeatherEntity {
   const CurrentWeatherModel({
-    Coord? coord,
-    List<Weather>? weather,
-    String? base,
-    Main? main,
-    num? visibility,
-    Wind? wind,
-    Rain? rain,
-    Clouds? clouds,
-    num? dt,
-    Sys? sys,
-    num? timezone,
-    num? id,
-    String? name,
-    num? cod,
-  }) : super(
-         coord: coord,
-         weather: weather,
-         base: base,
-         main: main,
-         visibility: visibility,
-         wind: wind,
-         rain: rain,
-         clouds: clouds,
-         dt: dt,
-         sys: sys,
-         timezone: timezone,
-         id: id,
-         name: name,
-         cod: cod,
-       );
+    super.coord,
+    super.weather,
+    super.base,
+    super.main,
+    super.visibility,
+    super.wind,
+    super.rain,
+    super.clouds,
+    super.dt,
+    super.sys,
+    super.timezone,
+    super.id,
+    super.name,
+    super.cod,
+  });
 
   factory CurrentWeatherModel.fromJson(dynamic json) {
     List<Weather> weathers = [];

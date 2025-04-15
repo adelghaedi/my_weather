@@ -1,5 +1,5 @@
 import '../../../../core/resources/data_state.dart';
-import '../../../../core/usecase/usecase.dart';
+import '../../../../core/use_case/use_case.dart';
 import '../entities/current_weather_entity.dart';
 import '../repositories/current_weather_repository.dart';
 
