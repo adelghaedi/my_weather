@@ -1,6 +1,11 @@
 part of 'weather_bloc.dart';
 
-@immutable
-sealed class WeatherState {}
+class WeatherState {
+  final CWStatus cwStatus;
 
-final class WeatherInitial extends WeatherState {}
+  WeatherState({required this.cwStatus});
+
+  WeatherState copyWith(CWStatus? newCWStatus) {
+    return WeatherState(cwStatus: newCWStatus ?? this.cwStatus);
+  }
+}
