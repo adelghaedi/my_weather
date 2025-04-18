@@ -5,7 +5,7 @@ class WeatherState {
 
   WeatherState({required this.cwStatus});
 
-  WeatherState copyWith(CWStatus? newCWStatus) {
+  WeatherState copyWith({CWStatus? newCWStatus}) {
     return WeatherState(cwStatus: newCWStatus ?? this.cwStatus);
   }
 }
