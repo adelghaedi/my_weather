@@ -9,7 +9,6 @@ class CurrentWeatherEntity extends Equatable {
   final Main? main;
   final num? visibility;
   final Wind? wind;
-  final Rain? rain;
   final Clouds? clouds;
   final num? dt;
   final Sys? sys;
@@ -25,7 +24,6 @@ class CurrentWeatherEntity extends Equatable {
     this.main,
     this.visibility,
     this.wind,
-    this.rain,
     this.clouds,
     this.dt,
     this.sys,
@@ -43,7 +41,6 @@ class CurrentWeatherEntity extends Equatable {
     main,
     visibility,
     wind,
-    rain,
     clouds,
     dt,
     sys,

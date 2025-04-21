@@ -1,63 +1,90 @@
-import '../../domain/entities/current_weather_entity.dart';
+import 'package:equatable/equatable.dart';
+import 'package:my_weather/feature/weather/domain/entities/current_weather_entity.dart';
 
-class CurrentWeatherModel extends CurrentWeatherEntity {
+/// coord : {"lon":51.4215,"lat":35.6944}
+/// weather : [{"id":800,"main":"Clear","description":"clear sky","icon":"01d"}]
+/// base : "stations"
+/// main : {"temp":29.84,"feels_like":28.01,"temp_min":29.84,"temp_max":29.99,"pressure":1017,"humidity":13}
+/// visibility : 10000
+/// wind : {"speed":3.09,"deg":180}
+/// clouds : {"all":0}
+/// dt : 1654412796
+/// sys : {"type":2,"id":47737,"country":"IR","sunrise":1654391936,"sunset":1654444014}
+/// timezone : 16200
+/// id : 112931
+/// name : "Tehran"
+/// cod : 200
+
+class CurrentWeatherModel extends CurrentWeatherEntity{
   const CurrentWeatherModel({
-    super.coord,
-    super.weather,
-    super.base,
-    super.main,
-    super.visibility,
-    super.wind,
-    super.rain,
-    super.clouds,
-    super.dt,
-    super.sys,
-    super.timezone,
-    super.id,
-    super.name,
-    super.cod,
-  });
+    Coord? coord,
+    List<Weather>? weather,
+    String? base,
+    Main? main,
+    int? visibility,
+    Wind? wind,
+    Clouds? clouds,
+    int? dt,
+    Sys? sys,
+    int? timezone,
+    int? id,
+    String? name,
+    int? cod,
+  }) : super(
+      coord: coord,
+      weather: weather,
+      base: base,
+      main: main,
+      visibility: visibility,
+      wind: wind,
+      clouds: clouds,
+      dt: dt,
+      sys: sys,
+      timezone: timezone,
+      id: id,
+      name: name,
+      cod: cod
+  );
 
   factory CurrentWeatherModel.fromJson(dynamic json) {
-    List<Weather> weathers = [];
+    List<Weather> weather = [];
     if (json['weather'] != null) {
-      for (final weather in json["weather"]) {
-        weathers.add(weather);
-      }
+      json['weather'].forEach((v) {
+        weather.add(Weather.fromJson(v));
+      });
     }
+
     return CurrentWeatherModel(
-      coord: json['coord'] != null ? Coord.fromJson(json['coord']) : null,
-      weather: weathers,
-      base: json['base'],
-      main: json['main'] != null ? Main.fromJson(json['main']) : null,
-      visibility: json['visibility'],
-      wind: json['wind'] != null ? Wind.fromJson(json['wind']) : null,
-      rain: json['rain'] != null ? Rain.fromJson(json['rain']) : null,
-      clouds: json['clouds'] != null ? Clouds.fromJson(json['clouds']) : null,
-      dt: json['dt'],
-      sys: json['sys'] != null ? Sys.fromJson(json['sys']) : null,
-      timezone: json['timezone'],
-      id: json['id'],
-      name: json['name'],
-      cod: json['cod'],
+        coord: json['coord'] != null ? Coord.fromJson(json['coord']) : null,
+        weather: weather,
+        base: json['base'],
+        main: json['main'] != null ? Main.fromJson(json['main']) : null,
+        visibility: json['visibility'],
+        wind: json['wind'] != null ? Wind.fromJson(json['wind']) : null,
+        clouds: json['clouds'] != null ? Clouds.fromJson(json['clouds']) : null,
+        dt: json['dt'],
+        sys: json['sys'] != null ? Sys.fromJson(json['sys']) : null,
+        timezone: json['timezone'],
+        id: json['id'],
+        name: json['name'],
+        cod: json['cod']
     );
   }
 }
 
-class Rain {
-  double? _one;
-
-  Rain({double? one});
-
-  Rain.fromJson(dynamic json) {
-    _one = json["1h"];
-  }
-
-  double? get one => _one;
-}
+/// type : 2
+/// id : 47737
+/// country : "IR"
+/// sunrise : 1654391936
+/// sunset : 1654444014
 
 class Sys {
-  Sys({int? type, int? id, String? country, int? sunrise, int? sunset}) {
+  Sys({
+    int? type,
+    int? id,
+    String? country,
+    int? sunrise,
+    int? sunset,}){
     _type = type;
     _id = id;
     _country = country;
@@ -72,7 +99,6 @@ class Sys {
     _sunrise = json['sunrise'];
     _sunset = json['sunset'];
   }
-
   int? _type;
   int? _id;
   String? _country;
@@ -80,13 +106,9 @@ class Sys {
   int? _sunset;
 
   int? get type => _type;
-
   int? get id => _id;
-
   String? get country => _country;
-
   int? get sunrise => _sunrise;
-
   int? get sunset => _sunset;
 
   Map<String, dynamic> toJson() {
@@ -98,19 +120,20 @@ class Sys {
     map['sunset'] = _sunset;
     return map;
   }
+
 }
 
 /// all : 0
 
 class Clouds {
-  Clouds({int? all}) {
+  Clouds({
+    int? all,}){
     _all = all;
   }
 
   Clouds.fromJson(dynamic json) {
     _all = json['all'];
   }
-
   int? _all;
 
   int? get all => _all;
@@ -120,13 +143,16 @@ class Clouds {
     map['all'] = _all;
     return map;
   }
+
 }
 
 /// speed : 3.09
 /// deg : 180
 
 class Wind {
-  Wind({double? speed, int? deg}) {
+  Wind({
+    double? speed,
+    int? deg,}){
     _speed = speed;
     _deg = deg;
   }
@@ -135,12 +161,10 @@ class Wind {
     _speed = json['speed'].toDouble();
     _deg = json['deg'];
   }
-
   double? _speed;
   int? _deg;
 
   double? get speed => _speed;
-
   int? get deg => _deg;
 
   Map<String, dynamic> toJson() {
@@ -149,6 +173,7 @@ class Wind {
     map['deg'] = _deg;
     return map;
   }
+
 }
 
 /// temp : 29.84
@@ -165,8 +190,7 @@ class Main {
     double? tempMin,
     double? tempMax,
     int? pressure,
-    int? humidity,
-  }) {
+    int? humidity,}){
     _temp = temp;
     _feelsLike = feelsLike;
     _tempMin = tempMin;
@@ -183,7 +207,6 @@ class Main {
     _pressure = json['pressure'];
     _humidity = json['humidity'];
   }
-
   double? _temp;
   double? _feelsLike;
   double? _tempMin;
@@ -192,15 +215,10 @@ class Main {
   int? _humidity;
 
   double? get temp => _temp;
-
   double? get feelsLike => _feelsLike;
-
   double? get tempMin => _tempMin;
-
   double? get tempMax => _tempMax;
-
   int? get pressure => _pressure;
-
   int? get humidity => _humidity;
 
   Map<String, dynamic> toJson() {
@@ -213,6 +231,7 @@ class Main {
     map['humidity'] = _humidity;
     return map;
   }
+
 }
 
 /// id : 800
@@ -221,7 +240,11 @@ class Main {
 /// icon : "01d"
 
 class Weather {
-  Weather({int? id, String? main, String? description, String? icon}) {
+  Weather({
+    int? id,
+    String? main,
+    String? description,
+    String? icon,}){
     _id = id;
     _main = main;
     _description = description;
@@ -234,18 +257,14 @@ class Weather {
     _description = json['description'];
     _icon = json['icon'];
   }
-
   int? _id;
   String? _main;
   String? _description;
   String? _icon;
 
   int? get id => _id;
-
   String? get main => _main;
-
   String? get description => _description;
-
   String? get icon => _icon;
 
   Map<String, dynamic> toJson() {
@@ -256,13 +275,16 @@ class Weather {
     map['icon'] = _icon;
     return map;
   }
+
 }
 
 /// lon : 51.4215
 /// lat : 35.6944
 
 class Coord {
-  Coord({double? lon, double? lat}) {
+  Coord({
+    double? lon,
+    double? lat,}){
     _lon = lon;
     _lat = lat;
   }
@@ -271,12 +293,10 @@ class Coord {
     _lon = json['lon'].toDouble();
     _lat = json['lat'].toDouble();
   }
-
   double? _lon;
   double? _lat;
 
   double? get lon => _lon;
-
   double? get lat => _lat;
 
   Map<String, dynamic> toJson() {
@@ -285,4 +305,5 @@ class Coord {
     map['lat'] = _lat;
     return map;
   }
+
 }
