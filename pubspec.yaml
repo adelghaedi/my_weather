@@ -39,6 +39,7 @@ dependencies:
   flutter_bloc: ^9.1.0
   bloc: ^9.0.0
   get_it: ^8.0.3
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
@@ -63,8 +64,9 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - assets/images/night_pic.jpg
+    - assets/images/light_pic.jpg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

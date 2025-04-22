@@ -11,7 +11,8 @@ void main() async {
     MaterialApp(
       debugShowCheckedModeBanner: false,
       home: MultiBlocProvider(
-        providers: [BlocProvider(create: (_) => locator<WeatherBloc>())],
+        providers: [BlocProvider(create: (_) => locator<WeatherBloc>())
+        ],
         child: MainWrapper(),
       ),
     ),
