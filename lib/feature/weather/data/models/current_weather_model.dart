@@ -1,5 +1,5 @@
-import 'package:equatable/equatable.dart';
-import 'package:my_weather/feature/weather/domain/entities/current_weather_entity.dart';
+
+import '../../domain/entities/current_weather_entity.dart';
 
 /// coord : {"lon":51.4215,"lat":35.6944}
 /// weather : [{"id":800,"main":"Clear","description":"clear sky","icon":"01d"}]
@@ -17,34 +17,20 @@ import 'package:my_weather/feature/weather/domain/entities/current_weather_entit
 
 class CurrentWeatherModel extends CurrentWeatherEntity{
   const CurrentWeatherModel({
-    Coord? coord,
-    List<Weather>? weather,
-    String? base,
-    Main? main,
-    int? visibility,
-    Wind? wind,
-    Clouds? clouds,
-    int? dt,
-    Sys? sys,
-    int? timezone,
-    int? id,
-    String? name,
-    int? cod,
-  }) : super(
-      coord: coord,
-      weather: weather,
-      base: base,
-      main: main,
-      visibility: visibility,
-      wind: wind,
-      clouds: clouds,
-      dt: dt,
-      sys: sys,
-      timezone: timezone,
-      id: id,
-      name: name,
-      cod: cod
-  );
+    super.coord,
+    super.weather,
+    super.base,
+    super.main,
+    int? super.visibility,
+    super.wind,
+    super.clouds,
+    int? super.dt,
+    super.sys,
+    int? super.timezone,
+    int? super.id,
+    super.name,
+    int? super.cod,
+  });
 
   factory CurrentWeatherModel.fromJson(dynamic json) {
     List<Weather> weather = [];
