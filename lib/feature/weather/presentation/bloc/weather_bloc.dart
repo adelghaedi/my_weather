@@ -19,7 +19,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
       DataState dataState = await getCurrentWeatherUseCase(event.cityName);
 
       if (dataState is DataSuccess) {
-        emit(state.copyWith(newCWStatus: CWCompleted(entity: dataState.data)));
+        emit(state.copyWith(newCWStatus: CWCompleted(currentWeatherEntity: dataState.data)));
       }
 
       if (dataState is DataError) {

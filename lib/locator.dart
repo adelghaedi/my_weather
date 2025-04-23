@@ -1,8 +1,8 @@
 import 'package:get_it/get_it.dart';
-import 'package:my_weather/feature/weather/domain/repositories/current_weather_repository.dart';
 
 import 'feature/weather/data/data_source/remote/api_provider.dart';
 import 'feature/weather/data/repositories/current_weather_repositoryImpl.dart';
+import 'feature/weather/domain/repositories/current_weather_repository.dart';
 import 'feature/weather/domain/use_cases/get_current_weather_use_case.dart';
 import 'feature/weather/presentation/bloc/weather_bloc.dart';
 

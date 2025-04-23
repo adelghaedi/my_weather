@@ -8,9 +8,9 @@ abstract class CWStatus {}
 class CWLoading extends CWStatus {}
 
 class CWCompleted extends CWStatus {
-  final CurrentWeatherEntity entity;
+  final CurrentWeatherEntity currentWeatherEntity;
 
-  CWCompleted({required this.entity});
+  CWCompleted({required this.currentWeatherEntity});
 }
 
 class CWError extends CWStatus {

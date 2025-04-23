@@ -40,6 +40,8 @@ dependencies:
   bloc: ^9.0.0
   get_it: ^8.0.3
   intl: ^0.20.2
+  loading_animation_widget: ^1.3.0
+  smooth_page_indicator: ^1.2.1
 
 dev_dependencies:
   flutter_test:
@@ -67,7 +69,14 @@ flutter:
   assets:
     - assets/images/night_pic.jpg
     - assets/images/light_pic.jpg
-  #   - images/a_dot_ham.jpeg
+    - assets/images/icons8-clouds-80.png
+    - assets/images/icons8-heavy-rain-80.png
+    - assets/images/icons8-partly-cloudy-day-80.png
+    - assets/images/icons8-rain-cloud-80.png
+    - assets/images/icons8-snow-80.png
+    - assets/images/icons8-storm-80.png
+    - assets/images/icons8-sun-96.png
+    - assets/images/icons8-windy-weather-80.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
