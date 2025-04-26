@@ -216,7 +216,7 @@ class _WeatherPageState extends State<WeatherPage> {
   );
 
   Widget _verticalDivider() =>
-      Container(color: Colors.white, height: 50, width: 2);
+      Container(color: Colors.grey, height: 50, width: 1.5);
 
   Widget _currentWeatherDescription(String description) =>
       Text(description, style: TextStyle(color: Colors.grey, fontSize: 20));
@@ -231,23 +231,22 @@ class _WeatherPageState extends State<WeatherPage> {
 
   Widget _currentWeatherMaxTemp(double maxTemp) => Column(
     children: [
+      Text("max", style: TextStyle(color: Colors.grey, fontSize: 20)),
       Text(
         "${maxTemp.round()}${Constants.celsiusUniCode}",
         style: TextStyle(color: Colors.white, fontSize: 20),
       ),
-
-      Text("max", style: TextStyle(color: Colors.white, fontSize: 20)),
     ],
   );
 
   Widget _currentWeatherMinTemp(double minTemp) => Column(
     children: [
+      Text("min", style: TextStyle(color: Colors.grey, fontSize: 20)),
       Text(
         "${minTemp.round()}${Constants.celsiusUniCode}",
         style: TextStyle(color: Colors.white, fontSize: 20),
       ),
 
-      Text("min", style: TextStyle(color: Colors.white, fontSize: 20)),
     ],
   );
 
