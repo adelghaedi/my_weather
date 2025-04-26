@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../../core/params/forecast_params.dart';
 import '../../../../core/utils/constants.dart';
 import '../../../../core/widgets/app_background.dart';
 import '../../../../core/widgets/dot_loading_widget.dart';
+import '../../../../locator.dart';
+import '../../data/models/suggest_city_model.dart';
 import '../../domain/entities/current_weather_entity.dart';
 import '../../domain/entities/forecast_days_entity.dart';
+import '../../domain/use_cases/get_city_suggestion_use_case.dart';
 import '../bloc/cw_status.dart';
 import '../bloc/fw_status.dart';
 import '../bloc/weather_bloc.dart';
@@ -21,6 +25,12 @@ class WeatherPage extends StatefulWidget {
 }
 
 class _WeatherPageState extends State<WeatherPage> {
+  final TextEditingController suggestionCityController =
+      TextEditingController();
+
+  final GetCitySuggestionUseCase getCitySuggestionUseCase =
+      GetCitySuggestionUseCase(weatherRepository: locator());
+
   final PageController _pageController = PageController(initialPage: 0);
   final String cityName = "Shiraz";
 
@@ -38,10 +48,57 @@ class _WeatherPageState extends State<WeatherPage> {
     return SafeArea(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [_currentWeatherBlocBuilder(height, width)],
+        children: [
+          Constants.verticalSpacer20,
+          _citySuggestionWidget(context, width),
+          _currentWeatherBlocBuilder(height, width),
+        ],
       ),
     );
   }
+
+  Widget _citySuggestionWidget(BuildContext context, double width) =>
+      Padding(
+      padding: EdgeInsets.symmetric(horizontal: width * 0.03),
+      child: TypeAheadField(
+        builder: (context, controller, focusNode) {
+
+          final OutlineInputBorder outlineInputBorder = OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.white),
+          );
+
+          return TextField(
+            controller: controller,
+            autofocus: false,
+            focusNode: focusNode,
+            style: TextStyle(color: Colors.white, fontSize: 20),
+            decoration: InputDecoration(
+              focusedBorder: outlineInputBorder,
+              enabledBorder: outlineInputBorder,
+              hintText: "Enter a city",
+              hintStyle: TextStyle(color: Colors.white),
+              border: outlineInputBorder,
+            ),
+          );
+        },
+        controller: suggestionCityController,
+        suggestionsCallback: (String prefix) {
+          return getCitySuggestionUseCase(prefix);
+        },
+        itemBuilder: (context, Data model) {
+          return ListTile(
+            leading: const Icon(Icons.location_on),
+            title: Text(model.name!),
+            subtitle: Text("${model.region}, ${model.country}"),
+          );
+        },
+        onSelected: (Data model) {
+          BlocProvider.of<WeatherBloc>(
+            context,
+          ).add(LoadCWEvent(cityName: model.name!));
+        },
+      ),
+    );
 
   Widget _currentWeatherBlocBuilder(double height, double width) =>
       BlocBuilder<WeatherBloc, WeatherState>(
@@ -246,7 +303,6 @@ class _WeatherPageState extends State<WeatherPage> {
         "${minTemp.round()}${Constants.celsiusUniCode}",
         style: TextStyle(color: Colors.white, fontSize: 20),
       ),
-
     ],
   );
 
