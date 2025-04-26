@@ -8,3 +8,13 @@ class LoadCWEvent extends WeatherEvent {
 
   LoadCWEvent({required this.cityName});
 }
+
+
+class LoadFWEvent extends WeatherEvent{
+  final ForecastParams forecastParams;
+
+  LoadFWEvent({required this.forecastParams});
+
+
+
+}

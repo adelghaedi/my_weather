@@ -18,17 +18,18 @@ class ApiProvider {
     return result;
   }
 
-  Future<Response> sendRequestFor7DayForecast(ForecastParams params) async {
+  Future<Response> sendRequestFor5DayForecast(ForecastParams params) async {
     final Response result = await _dio.get(
-      "/data/2.5/onecall",
+      "/data/2.5/forecast",
       queryParameters: {
         "lat": params.lat,
         "lon": params.lon,
-        "exclude": "minutely,hourly",
         "appid": Constants.apikey,
         "units": Constants.units,
       },
     );
+
+    print(result.realUri);
 
     return result;
   }

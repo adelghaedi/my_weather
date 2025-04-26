@@ -39,7 +39,7 @@ class CurrentWeatherRepositoryImpl extends WeatherRepository {
   Future<DataState<ForecastDaysEntity>> fetchForecastDaysData(
     ForecastParams forecastParams,
   ) async {
-    final Response response = await apiProvider.sendRequestFor7DayForecast(
+    final Response response = await apiProvider.sendRequestFor5DayForecast(
       forecastParams,
     );
 

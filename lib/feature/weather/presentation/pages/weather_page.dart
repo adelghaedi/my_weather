@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import '../../../../core/params/forecast_params.dart';
 import '../../../../core/utils/constants.dart';
 import '../../../../core/widgets/app_background.dart';
 import '../../../../core/widgets/dot_loading_widget.dart';
 import '../../domain/entities/current_weather_entity.dart';
+import '../../domain/entities/forecast_days_entity.dart';
 import '../bloc/cw_status.dart';
+import '../bloc/fw_status.dart';
 import '../bloc/weather_bloc.dart';
+import '../widgets/day_weather_view.dart';
 
 class WeatherPage extends StatefulWidget {
   const WeatherPage({super.key});
@@ -19,7 +23,6 @@ class WeatherPage extends StatefulWidget {
 class _WeatherPageState extends State<WeatherPage> {
   final PageController _pageController = PageController(initialPage: 0);
   final String cityName = "Shiraz";
-  final String celsiusUniCode="\u00B0";
 
   @override
   void initState() {
@@ -29,40 +32,56 @@ class _WeatherPageState extends State<WeatherPage> {
 
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width;
-    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.sizeOf(context).width;
+    final double height = MediaQuery.sizeOf(context).height;
 
     return SafeArea(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          BlocBuilder<WeatherBloc, WeatherState>(
-            builder: (context, state) {
-              if (state.cwStatus is CWLoading) {
-                return Expanded(child: Center(child: DotLoadingWidget()));
-              }
-
-              if (state.cwStatus is CWCompleted) {
-                final CurrentWeatherEntity currentWeatherEntity =
-                    (state.cwStatus as CWCompleted).currentWeatherEntity;
-                return Expanded(
-                  child: _currentWeatherCompletedWidget(
-                    height,
-                    width,
-                    currentWeatherEntity,
-                  ),
-                );
-              }
-
-              if (state.cwStatus is CWError) {}
-
-              return Container();
-            },
-          ),
-        ],
+        children: [_currentWeatherBlocBuilder(height, width)],
       ),
     );
   }
+
+  Widget _currentWeatherBlocBuilder(double height, double width) =>
+      BlocBuilder<WeatherBloc, WeatherState>(
+        buildWhen: (previous, current) {
+          if (previous.cwStatus == current.cwStatus) {
+            return false;
+          }
+          return true;
+        },
+        builder: (context, state) {
+          if (state.cwStatus is CWLoading) {
+            return Expanded(child: Center(child: DotLoadingWidget()));
+          }
+
+          if (state.cwStatus is CWCompleted) {
+            final CurrentWeatherEntity currentWeatherEntity =
+                (state.cwStatus as CWCompleted).currentWeatherEntity;
+
+            final ForecastParams params = ForecastParams(
+              lat: currentWeatherEntity.coord!.lat!,
+              lon: currentWeatherEntity.coord!.lon!,
+            );
+            BlocProvider.of<WeatherBloc>(
+              context,
+            ).add(LoadFWEvent(forecastParams: params));
+
+            return Expanded(
+              child: _currentWeatherCompletedWidget(
+                height,
+                width,
+                currentWeatherEntity,
+              ),
+            );
+          }
+
+          if (state.cwStatus is CWError) {}
+
+          return Container();
+        },
+      );
 
   Widget _dotPageIndicator() => Center(
     child: SmoothPageIndicator(
@@ -102,8 +121,61 @@ class _WeatherPageState extends State<WeatherPage> {
       ),
       Constants.verticalSpacer20,
       _dotPageIndicator(),
+      Constants.verticalSpacer20,
+      _divider(),
+      Constants.verticalSpacer20,
+      _forecastWeather(width),
+      Constants.verticalSpacer20,
+      _divider(),
     ],
   );
+
+  Widget _divider() => Divider(
+    height: 2,
+    thickness: 1.5,
+    color: Colors.grey.withValues(alpha: 0.5),
+  );
+
+  Widget _forecastWeather(double width) => SizedBox(
+    width: width,
+    height: 100,
+    child: Center(child: _forecastWeatherBlocBuilder()),
+  );
+
+  Widget _forecastWeatherBlocBuilder() =>
+      BlocBuilder<WeatherBloc, WeatherState>(
+        builder: (context, state) {
+          if (state.fwStatus is FWLoading) {
+            return Center(child: DotLoadingWidget());
+          }
+          if (state.fwStatus is FWCompleted) {
+            final ForecastDaysEntity forecastDaysEntity =
+                (state.fwStatus as FWCompleted).forecastDaysEntity;
+
+            return _forecastWeatherCompletedWidget(forecastDaysEntity);
+          }
+
+          if (state.fwStatus is FWError) {}
+
+          return Container();
+        },
+      );
+
+  Widget _forecastWeatherCompletedWidget(
+    ForecastDaysEntity forecastDaysEntity,
+  ) {
+    final int listViewItemCount = (forecastDaysEntity.days!.length) ~/ 8;
+    return ListView.builder(
+      shrinkWrap: true,
+      scrollDirection: Axis.horizontal,
+      itemCount: listViewItemCount,
+      itemBuilder: (context, index) {
+        return DayWeatherView(
+          day: forecastDaysEntity.days![((index + 1) * 8) - 1],
+        );
+      },
+    );
+  }
 
   Widget _pageViewBuilder(CurrentWeatherEntity currentWeatherEntity) =>
       PageView.builder(
@@ -153,14 +225,14 @@ class _WeatherPageState extends State<WeatherPage> {
       Text(cityName, style: TextStyle(color: Colors.white, fontSize: 30));
 
   Widget _currentWeatherTemp(double temp) => Text(
-    "${temp.round()}$celsiusUniCode",
+    "${temp.round()}${Constants.celsiusUniCode}",
     style: TextStyle(color: Colors.white, fontSize: 50),
   );
 
   Widget _currentWeatherMaxTemp(double maxTemp) => Column(
     children: [
       Text(
-        "${maxTemp.round()}$celsiusUniCode",
+        "${maxTemp.round()}${Constants.celsiusUniCode}",
         style: TextStyle(color: Colors.white, fontSize: 20),
       ),
 
@@ -171,7 +243,7 @@ class _WeatherPageState extends State<WeatherPage> {
   Widget _currentWeatherMinTemp(double minTemp) => Column(
     children: [
       Text(
-        "${minTemp.round()}$celsiusUniCode",
+        "${minTemp.round()}${Constants.celsiusUniCode}",
         style: TextStyle(color: Colors.white, fontSize: 20),
       ),
 

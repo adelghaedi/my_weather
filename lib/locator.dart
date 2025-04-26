@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:my_weather/feature/weather/domain/use_cases/get_forecast_days_use_case.dart';
 
 import 'feature/weather/data/data_source/remote/api_provider.dart';
 import 'feature/weather/data/repositories/weather_repositoryImpl.dart';
@@ -16,11 +17,16 @@ setup() {
     CurrentWeatherRepositoryImpl(locator()),
   );
 
-  //use case
+  //current weather use case
   locator.registerSingleton<GetCurrentWeatherUseCase>(
     GetCurrentWeatherUseCase(locator()),
   );
 
+  //forecast days use case
+  locator.registerSingleton<GetForecastDaysUseCase>(
+    GetForecastDaysUseCase(locator()),
+  );
+
   //bloc
-  locator.registerSingleton<WeatherBloc>(WeatherBloc(locator()));
+  locator.registerSingleton<WeatherBloc>(WeatherBloc(locator(), locator()));
 }

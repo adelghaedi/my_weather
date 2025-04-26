@@ -3,37 +3,10 @@ import 'package:equatable/equatable.dart';
 import '../../data/models/forecast_days_model.dart';
 
 class ForecastDaysEntity extends Equatable {
-  final double? lat;
-  final double? lon;
-  final String? timezone;
-  final int? timezoneOffset;
-  final Current? current;
-  final List<Daily>? daily;
-  final List<Alerts>? alerts;
+  final List<Day>? days;
 
-  const ForecastDaysEntity({
-    this.lat,
-    this.lon,
-    this.timezone,
-    this.timezoneOffset,
-    this.current,
-    this.daily,
-    this.alerts,
-  });
+  const ForecastDaysEntity({required this.days});
 
   @override
-  // TODO: implement props
-  List<Object?> get props => [
-    lat,
-    lon,
-    timezone,
-    timezoneOffset,
-    current,
-    daily,
-    alerts,
-  ];
-
-  @override
-  // TODO: implement stringify
-  bool? get stringify => true;
+  List<Object?> get props => [days];
 }
