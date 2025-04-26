@@ -29,8 +29,6 @@ class ApiProvider {
       },
     );
 
-    print(result.realUri);
-
     return result;
   }
 }
