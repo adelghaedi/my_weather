@@ -57,48 +57,46 @@ class _WeatherPageState extends State<WeatherPage> {
     );
   }
 
-  Widget _citySuggestionWidget(BuildContext context, double width) =>
-      Padding(
-      padding: EdgeInsets.symmetric(horizontal: width * 0.03),
-      child: TypeAheadField(
-        builder: (context, controller, focusNode) {
+  Widget _citySuggestionWidget(BuildContext context, double width) => Padding(
+    padding: EdgeInsets.symmetric(horizontal: width * 0.03),
+    child: TypeAheadField<Data>(
+      builder: (context, controller, focusNode) {
+        final OutlineInputBorder outlineInputBorder = OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+        );
 
-          final OutlineInputBorder outlineInputBorder = OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white),
-          );
-
-          return TextField(
-            controller: controller,
-            autofocus: false,
-            focusNode: focusNode,
-            style: TextStyle(color: Colors.white, fontSize: 20),
-            decoration: InputDecoration(
-              focusedBorder: outlineInputBorder,
-              enabledBorder: outlineInputBorder,
-              hintText: "Enter a city",
-              hintStyle: TextStyle(color: Colors.white),
-              border: outlineInputBorder,
-            ),
-          );
-        },
-        controller: suggestionCityController,
-        suggestionsCallback: (String prefix) {
-          return getCitySuggestionUseCase(prefix);
-        },
-        itemBuilder: (context, Data model) {
-          return ListTile(
-            leading: const Icon(Icons.location_on),
-            title: Text(model.name!),
-            subtitle: Text("${model.region}, ${model.country}"),
-          );
-        },
-        onSelected: (Data model) {
-          BlocProvider.of<WeatherBloc>(
-            context,
-          ).add(LoadCWEvent(cityName: model.name!));
-        },
-      ),
-    );
+        return TextField(
+          controller: controller,
+          autofocus: false,
+          focusNode: focusNode,
+          style: TextStyle(color: Colors.white, fontSize: 20),
+          decoration: InputDecoration(
+            focusedBorder: outlineInputBorder,
+            enabledBorder: outlineInputBorder,
+            hintText: "Enter a city",
+            hintStyle: TextStyle(color: Colors.white),
+            border: outlineInputBorder,
+          ),
+        );
+      },
+      controller: suggestionCityController,
+      suggestionsCallback: (String prefix) {
+        return getCitySuggestionUseCase(prefix);
+      },
+      itemBuilder: (context, Data model) {
+        return ListTile(
+          leading: const Icon(Icons.location_on),
+          title: Text(model.name!),
+          subtitle: Text("${model.region}, ${model.country}"),
+        );
+      },
+      onSelected: (Data model) {
+        BlocProvider.of<WeatherBloc>(
+          context,
+        ).add(LoadCWEvent(cityName: model.name!));
+      },
+    ),
+  );
 
   Widget _currentWeatherBlocBuilder(double height, double width) =>
       BlocBuilder<WeatherBloc, WeatherState>(
