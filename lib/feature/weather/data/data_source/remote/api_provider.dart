@@ -8,7 +8,7 @@ class ApiProvider {
 
   Future<Response> getCurrentWeather(String cityName) async {
     final Response result = await _dio.get(
-      "${Constants.weatherBaseUrl}/data/2.5/weather",
+      "${Constants.weatherBaseUrl}${Constants.currentWeatherEndPointUrl}",
       queryParameters: {
         "appid": Constants.apikey,
         "units": Constants.units,
@@ -20,7 +20,7 @@ class ApiProvider {
 
   Future<Response> sendRequestFor5DayForecast(ForecastParams params) async {
     final Response result = await _dio.get(
-      "${Constants.weatherBaseUrl}/data/2.5/forecast",
+      "${Constants.weatherBaseUrl}${Constants.forecastWeatherEndPointUrl}",
       queryParameters: {
         "lat": params.lat,
         "lon": params.lon,
@@ -34,7 +34,7 @@ class ApiProvider {
 
   Future<Response> sendRequestCitySuggestion(String cityName) async {
     final Response result = await _dio.get(
-      "${Constants.cityBaseUrl}/v1/geo/cities",
+      "${Constants.cityBaseUrl}${Constants.citySuggestionEndPointUrl}",
       queryParameters: {"limit": 7, "offset": 0, "namePrefix": cityName},
     );
 

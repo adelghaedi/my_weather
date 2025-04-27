@@ -259,17 +259,18 @@ class _WeatherPageState extends State<WeatherPage> {
     color: Colors.grey.withValues(alpha: 0.5),
   );
 
-  Widget _forecastWeather(double width, double height) => SizedBox(
+  Widget _forecastWeather(double width, double height) => Container(
+    alignment: Alignment.center,
     width: width,
     height: height / 8 < 100 ? 100 : height / 8,
-    child: Center(child: _forecastWeatherBlocBuilder()),
+    child: _forecastWeatherBlocBuilder(),
   );
 
   Widget _forecastWeatherBlocBuilder() =>
       BlocBuilder<WeatherBloc, WeatherState>(
         builder: (context, state) {
           if (state.fwStatus is FWLoading) {
-            return Center(child: DotLoadingWidget());
+            return DotLoadingWidget();
           }
           if (state.fwStatus is FWCompleted) {
             final ForecastDaysEntity forecastDaysEntity =
