@@ -167,20 +167,18 @@ class _WeatherPageState extends State<WeatherPage> {
     CurrentWeatherEntity currentWeatherEntity,
   ) => ListView(
     children: [
-      Padding(
-        padding: EdgeInsets.only(top: height * 0.02),
-        child: SizedBox(
-          width: width,
-          height: 400,
-          child: _pageViewBuilder(currentWeatherEntity),
-        ),
+      Constants.verticalSpacer20,
+      SizedBox(
+        width: width,
+        height: height / 2 < 400 ? 400 : height / 2,
+        child: _pageViewBuilder(currentWeatherEntity),
       ),
       Constants.verticalSpacer20,
       _dotPageIndicator(),
       Constants.verticalSpacer20,
       _divider(),
       Constants.verticalSpacer20,
-      _forecastWeather(width),
+      _forecastWeather(width, height),
       Constants.verticalSpacer20,
       _divider(),
       Constants.verticalSpacer20,
@@ -251,9 +249,9 @@ class _WeatherPageState extends State<WeatherPage> {
     color: Colors.grey.withValues(alpha: 0.5),
   );
 
-  Widget _forecastWeather(double width) => SizedBox(
+  Widget _forecastWeather(double width, double height) => SizedBox(
     width: width,
-    height: 100,
+    height: height / 8 < 100 ? 100 : height / 8,
     child: Center(child: _forecastWeatherBlocBuilder()),
   );
 
