@@ -5,6 +5,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../../core/params/forecast_params.dart';
 import '../../../../core/utils/constants.dart';
+import '../../../../core/utils/date_converter.dart';
 import '../../../../core/widgets/app_background.dart';
 import '../../../../core/widgets/dot_loading_widget.dart';
 import '../../../../locator.dart';
@@ -182,8 +183,67 @@ class _WeatherPageState extends State<WeatherPage> {
       _forecastWeather(width),
       Constants.verticalSpacer20,
       _divider(),
+      Constants.verticalSpacer20,
+      _detailsCurrentWeatherWidget(currentWeatherEntity, height),
+      Constants.verticalSpacer20,
     ],
   );
+
+  Widget _detailsCurrentWeatherWidget(
+    CurrentWeatherEntity currentWeatherEntity,
+    double height,
+  ) {
+    final String sunrise = DateConverter.changeDtToDateTimeHour(
+      currentWeatherEntity.sys!.sunrise,
+      currentWeatherEntity.timezone,
+    );
+
+    final String sunset = DateConverter.changeDtToDateTimeHour(
+      currentWeatherEntity.sys!.sunset,
+      currentWeatherEntity.timezone,
+    );
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _labelAndValueWidget(
+          height,
+          "wind speed",
+          "${currentWeatherEntity.wind!.speed!} m/s",
+        ),
+        Constants.horizontalSpacer10,
+        _divider30(),
+        Constants.horizontalSpacer10,
+        _labelAndValueWidget(height, "sunrise", sunrise),
+        Constants.horizontalSpacer10,
+        _divider30(),
+        Constants.horizontalSpacer10,
+        _labelAndValueWidget(height, "sunset", sunset),
+        Constants.horizontalSpacer10,
+        _divider30(),
+        Constants.horizontalSpacer10,
+        _labelAndValueWidget(
+          height,
+          "humidity",
+          "${currentWeatherEntity.main!.humidity}%",
+        ),
+      ],
+    );
+  }
+
+  Widget _labelAndValueWidget(double height, String label, String value) =>
+      Column(
+        children: [
+          Text(
+            label,
+            style: TextStyle(fontSize: height * 0.017, color: Colors.amber),
+          ),
+          Text(
+            value,
+            style: TextStyle(fontSize: height * 0.016, color: Colors.white),
+          ),
+        ],
+      );
 
   Widget _divider() => Divider(
     height: 2,
@@ -262,7 +322,7 @@ class _WeatherPageState extends State<WeatherPage> {
         children: [
           _currentWeatherMaxTemp(currentWeatherEntity.main!.tempMax!),
           Constants.horizontalSpacer10,
-          _verticalDivider(),
+          _divider50(),
           Constants.horizontalSpacer10,
           _currentWeatherMinTemp(currentWeatherEntity.main!.tempMin!),
         ],
@@ -270,8 +330,9 @@ class _WeatherPageState extends State<WeatherPage> {
     ],
   );
 
-  Widget _verticalDivider() =>
-      Container(color: Colors.grey, height: 50, width: 1.5);
+  Widget _divider50() => Container(color: Colors.grey, height: 50, width: 1.5);
+
+  Widget _divider30() => Container(color: Colors.grey, height: 30, width: 1.5);
 
   Widget _currentWeatherDescription(String description) =>
       Text(description, style: TextStyle(color: Colors.grey, fontSize: 20));
