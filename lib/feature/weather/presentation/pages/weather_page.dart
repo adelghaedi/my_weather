@@ -33,12 +33,13 @@ class _WeatherPageState extends State<WeatherPage> {
       GetCitySuggestionUseCase(weatherRepository: locator());
 
   final PageController _pageController = PageController(initialPage: 0);
-  final String cityName = "Shiraz";
 
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<WeatherBloc>(context).add(LoadCWEvent(cityName: cityName));
+    BlocProvider.of<WeatherBloc>(
+      context,
+    ).add(LoadCWEvent(cityName: Constants.defaultCityCurrentWeather));
   }
 
   @override
@@ -51,52 +52,61 @@ class _WeatherPageState extends State<WeatherPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Constants.verticalSpacer20,
-          _citySuggestionWidget(context, width),
+          _citySuggestionTextField(context, width),
           _currentWeatherBlocBuilder(height, width),
         ],
       ),
     );
   }
 
-  Widget _citySuggestionWidget(BuildContext context, double width) => Padding(
-    padding: EdgeInsets.symmetric(horizontal: width * 0.03),
-    child: TypeAheadField<Data>(
-      builder: (context, controller, focusNode) {
-        final OutlineInputBorder outlineInputBorder = OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
-        );
+  Widget _citySuggestionTextField(BuildContext context, double width) =>
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: width * 0.03),
+        child: TypeAheadField<Data>(
+          builder: _citySuggestionBuilder,
+          controller: suggestionCityController,
+          suggestionsCallback: (String prefix) {
+            return getCitySuggestionUseCase(prefix);
+          },
+          itemBuilder: _citySuggestionItemBuilder,
+          onSelected: _citySuggestionOnSelected,
+        ),
+      );
 
-        return TextField(
-          controller: controller,
-          autofocus: false,
-          focusNode: focusNode,
-          style: TextStyle(color: Colors.white, fontSize: 20),
-          decoration: InputDecoration(
-            focusedBorder: outlineInputBorder,
-            enabledBorder: outlineInputBorder,
-            hintText: "Enter a city",
-            hintStyle: TextStyle(color: Colors.white),
-            border: outlineInputBorder,
-          ),
-        );
-      },
-      controller: suggestionCityController,
-      suggestionsCallback: (String prefix) {
-        return getCitySuggestionUseCase(prefix);
-      },
-      itemBuilder: (context, Data model) {
-        return ListTile(
-          leading: const Icon(Icons.location_on),
-          title: Text(model.name!),
-          subtitle: Text("${model.region}, ${model.country}"),
-        );
-      },
-      onSelected: (Data model) {
-        BlocProvider.of<WeatherBloc>(
-          context,
-        ).add(LoadCWEvent(cityName: model.name!));
-      },
-    ),
+  Widget _citySuggestionBuilder(
+    BuildContext context,
+    TextEditingController controller,
+    FocusNode focusNode,
+  ) {
+    final OutlineInputBorder outlineInputBorder = OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.white),
+    );
+
+    return TextField(
+      controller: controller,
+      autofocus: false,
+      focusNode: focusNode,
+      style: TextStyle(color: Colors.white, fontSize: 20),
+      decoration: InputDecoration(
+        focusedBorder: outlineInputBorder,
+        enabledBorder: outlineInputBorder,
+        hintText: Constants.citySuggestionTextFieldHint,
+        hintStyle: TextStyle(color: Colors.white),
+        border: outlineInputBorder,
+      ),
+    );
+  }
+
+  void _citySuggestionOnSelected(Data model) {
+    BlocProvider.of<WeatherBloc>(
+      context,
+    ).add(LoadCWEvent(cityName: model.name!));
+  }
+
+  Widget _citySuggestionItemBuilder(context, Data model) => ListTile(
+    leading: const Icon(Icons.location_on),
+    title: Text(model.name!),
+    subtitle: Text("${model.region}, ${model.country}"),
   );
 
   Widget _currentWeatherBlocBuilder(double height, double width) =>
@@ -206,23 +216,23 @@ class _WeatherPageState extends State<WeatherPage> {
       children: [
         _labelAndValueWidget(
           height,
-          "wind speed",
+          Constants.windSpeedLabel,
           "${currentWeatherEntity.wind!.speed!} m/s",
         ),
         Constants.horizontalSpacer10,
         _divider30(),
         Constants.horizontalSpacer10,
-        _labelAndValueWidget(height, "sunrise", sunrise),
+        _labelAndValueWidget(height, Constants.sunriseLabel, sunrise),
         Constants.horizontalSpacer10,
         _divider30(),
         Constants.horizontalSpacer10,
-        _labelAndValueWidget(height, "sunset", sunset),
+        _labelAndValueWidget(height, Constants.sunsetLabel, sunset),
         Constants.horizontalSpacer10,
         _divider30(),
         Constants.horizontalSpacer10,
         _labelAndValueWidget(
           height,
-          "humidity",
+          Constants.humidityLabel,
           "${currentWeatherEntity.main!.humidity}%",
         ),
       ],
@@ -345,7 +355,10 @@ class _WeatherPageState extends State<WeatherPage> {
 
   Widget _currentWeatherMaxTemp(double maxTemp) => Column(
     children: [
-      Text("max", style: TextStyle(color: Colors.grey, fontSize: 20)),
+      Text(
+        Constants.maxLabel,
+        style: TextStyle(color: Colors.grey, fontSize: 20),
+      ),
       Text(
         "${maxTemp.round()}${Constants.celsiusUniCode}",
         style: TextStyle(color: Colors.white, fontSize: 20),
@@ -355,7 +368,10 @@ class _WeatherPageState extends State<WeatherPage> {
 
   Widget _currentWeatherMinTemp(double minTemp) => Column(
     children: [
-      Text("min", style: TextStyle(color: Colors.grey, fontSize: 20)),
+      Text(
+        Constants.minLabel,
+        style: TextStyle(color: Colors.grey, fontSize: 20),
+      ),
       Text(
         "${minTemp.round()}${Constants.celsiusUniCode}",
         style: TextStyle(color: Colors.white, fontSize: 20),
